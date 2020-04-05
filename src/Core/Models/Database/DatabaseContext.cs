@@ -6,6 +6,13 @@ namespace BrackeysBot.Models.Database
     public class DatabaseContext : DbContext
     {
         private readonly BotConfiguration _config;
+
+        public DbSet<AuditLog> AuditLogs { get; set; }
+        public DbSet<Infractions> Infractions { get; set; }
+        public DbSet<ModerationTypes> ModerationTypes { get; set; }
+        public DbSet<TemporaryInfractions> TemporaryInfractions { get; set; }
+        public DbSet<UserData> UserData { get; set; }
+
         public DatabaseContext(BotConfiguration config)
         {
             Console.WriteLine("Creating");
