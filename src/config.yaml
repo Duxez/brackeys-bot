@@ -1,0 +1,27 @@
+token: 'NDEzMDI3MTc1MzIzNjY0Mzk0.Xoi7ZA.vvzdlcIeJzFA-O6ZOXOuyWrr5a8'
+prefix: '[]'
+guildId: 0
+guruRoleId: 0
+moderatorRoleId: 0
+mutedRoleId: 0
+modLogChannelId: 0
+teamRoleIds: 
+userRoleIds: 
+loggableIds: 
+allowedCodeblockChannelIds: 
+moduleConfigs: {}
+rules: 
+codeblockThreshold: 0
+blockedWords: 
+clearMessageMaxHistory: 0
+infoCategoryId: 0
+infoCategoryDisplay: 
+emoteRestrictions: 
+gamejamTimestamps: 
+endorseTimeoutMillis: 0
+
+#db
+server: 'localhost'
+database: 'brackeysbot'
+user: 'root'
+password: 'root'

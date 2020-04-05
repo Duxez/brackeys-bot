@@ -13,6 +13,7 @@ namespace BrackeysBot.Commands
     public partial class ModerationModule : BrackeysBotModule
     {
         public ModerationService Moderation { get; set; }
+        public DatabaseService Database { get; set; }
 
         public const string DefaultReason = "Unspecified";
     }

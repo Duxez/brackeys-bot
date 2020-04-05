@@ -108,6 +108,20 @@ namespace BrackeysBot
         [Description("The minimum time between being able to endorse the same user again, in milliseconds")]
         public int EndorseTimeoutMillis { get; set; }
 
-
+        [YamlMember(Alias = "server"), Confidential]
+        [Description("The server the database is hosted on.")]
+        public string Server { get; set; }
+        
+        [YamlMember(Alias = "database"), Confidential]
+        [Description("The database name for the bot.")]
+        public string Database { get; set; }
+        
+        [YamlMember(Alias = "user"), Confidential]
+        [Description("The user with access to the database.")]
+        public string User { get; set; }
+        
+        [YamlMember(Alias = "password"), Confidential]
+        [Description("The password of the user.")]
+        public string Password { get; set; }
     }
 }
