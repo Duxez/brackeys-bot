@@ -81,6 +81,14 @@ namespace BrackeysBot.Services
                         .Build()
                         .SendToChannel(context.Channel);
                 }
+                else if (result.Error == CommandError.ObjectNotFound)
+                {
+                    await new EmbedBuilder()
+                        .WithColor(Color.Red)
+                        .WithDescription(result.ErrorReason)
+                        .Build()
+                        .SendToChannel(context.Channel);
+                }
                 else if (result is ExecuteResult executeResult)
                 {
                     await new EmbedBuilder()
@@ -93,11 +101,21 @@ namespace BrackeysBot.Services
                 else 
                 {
                     await _log.LogMessageAsync(new LogMessage(LogSeverity.Warning, GetType().Name.Prettify(), $"Unknown statement reached: Command={(command.IsSpecified ? command.Value : null)};Result={result}"));
-                    await new EmbedBuilder()
-                        .WithColor(Color.Red)
-                        .WithDescription("Unknown error! ( I created a log entry for the developers! :smile: )")
-                        .Build()
-                        .SendToChannel(context.Channel);
+
+                    EmbedBuilder reply = new EmbedBuilder()
+                        .WithColor(Color.Red);
+
+                    if (_dataService.Configuration.DeveloperRoleID != 0)
+                    {
+                        reply.WithDescription("Unknown error! I'll tell the developers ... :eyes:");
+                        await context.Channel.SendMessageAsync(MentionUtils.MentionRole(_dataService.Configuration.DeveloperRoleID), false, reply.Build());
+                    }
+                    else
+                    {
+                        await reply.WithDescription("Unknown error! I wanted to tell the developers, but I don't know who they are ... :frowning:")
+                            .Build()
+                            .SendToChannel(context.Channel);
+                    }
                 }
             }
         }
