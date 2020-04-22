@@ -13,23 +13,25 @@ namespace BrackeysBot.Services
     public class ModerationService : BrackeysBotService
     {
         private readonly DataService _data;
-
-        public ModerationService(DataService data)
+        private readonly DatabaseService _db;
+        
+        public ModerationService(DataService data, DatabaseService db)
         {
             _data = data;
+            _db = db;
         }
 
-        public void AddInfraction(IUser user, Infraction infraction)
+        public int AddInfraction(IUser user, Models.Database.Infraction infraction)
         {
-            var userData = _data.UserData.GetOrCreate(user.Id);
-            userData.Infractions.Add(infraction);
-
-            _data.SaveUserData();
+            _db.Context.Infractions.Add(infraction);
+            _db.Context.SaveChanges();
 
             SendInfractionMessageToUser(user, infraction);
+
+            return infraction.Id;
         }
 
-        public void AddTemporaryInfraction(TemporaryInfractionType type, IUser user, IUser moderator, TimeSpan duration, string reason = "")
+        public int AddTemporaryInfraction(InfractionType type, IUser user, IUser moderator, TimeSpan duration, string reason = "")
         {
             Infraction infraction = AddTemporaryInfraction(type, user.Id, moderator, duration, reason);
             SendInfractionMessageToUser(user, infraction);
@@ -46,6 +48,7 @@ namespace BrackeysBot.Services
                 .WithType(type.AsInfractionType())
                 .WithModerator(moderator)
                 .WithDescription(reason)
+                .WithEndDate(DateTime.UtcNow.Add(duration))
                 .WithAdditionalInfo($"Duration: {duration.Humanize(7)}");
 
             userData.Infractions.Add(infraction);
@@ -54,15 +57,15 @@ namespace BrackeysBot.Services
 
             return infraction;
         }
-        public void ClearTemporaryInfraction(TemporaryInfractionType type, IUser user)
-            => ClearTemporaryInfraction(type, user.Id);
-        public void ClearTemporaryInfraction(TemporaryInfractionType type, ulong userId)
-        {
-            var userData = _data.UserData.GetOrCreate(userId);
-            userData.TemporaryInfractions.RemoveAll(i => i.Type == type);
-
-            _data.SaveUserData();
-        }
+//        public void ClearTemporaryInfraction(InfractionType type, IUser user)
+//            => ClearTemporaryInfraction(type, user.Id);
+//        public void ClearTemporaryInfraction(InfractionType type, ulong userId)
+//        {
+//            var userData = _data.UserData.GetOrCreate(userId);
+//            userData.TemporaryInfractions.RemoveAll(i => i.Type == type);
+//
+//            _data.SaveUserData();
+//        }
 
         public int ClearInfractions(IUser user)
         {
@@ -105,15 +108,16 @@ namespace BrackeysBot.Services
                 : 1;
 
     
-        private async void SendInfractionMessageToUser(IUser user, Infraction infraction) 
+        private async void SendInfractionMessageToUser(IUser user, Models.Database.Infraction infraction)
         {
+            var modType = (InfractionType) infraction.ModerationTypeId;
             // Tempban and Ban send a DM themselves, we don't have to send a duplicate.
-            if (infraction.Type == InfractionType.TemporaryBan || infraction.Type == InfractionType.Ban)
+            if (modType == InfractionType.TemporaryBan || modType == InfractionType.Ban)
                 return;
 
             UserData userData = _data.UserData.GetUser(user.Id);
             int infractionCount = userData.Infractions.Count;
-            string message = $"Hey there! You were **{GetInfractionTypeString(infraction.Type)}** for **{infraction.Description}**! You currently have **{infractionCount}** infraction(s). Be careful; accumulating infractions may result in restricted access or even (permanent) removal from the server!";
+            string message = $"Hey there! You were **{GetInfractionTypeString(modType)}** for **{infraction.Reason}**! You currently have **{infractionCount}** infraction(s). Be careful; accumulating infractions may result in restricted access or even (permanent) removal from the server!";
 
             await user.TrySendMessageAsync(message);
         }

@@ -34,10 +34,10 @@ namespace BrackeysBot.Commands
             await user.MuteAsync(Context);
 
             SetUserMuted(user.Id, true);
-
-            Moderation.AddInfraction(user, Infraction.Create(Moderation.RequestInfractionID())
+            
+            Moderation.AddInfraction(user, Models.Database.Infraction.Create(user.Id)
                 .WithType(InfractionType.Mute)
-                .WithModerator(Context.User)
+                .WithModerator(Context.User.Id)
                 .WithDescription(reason));
             
             await ModerationLog.CreateEntry(ModerationLogEntry.New

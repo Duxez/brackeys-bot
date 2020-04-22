@@ -30,10 +30,10 @@ namespace BrackeysBot.Commands
             {
                 previousInfractions = string.Join('\n', data.Infractions.OrderByDescending(i => i.Time).Select(i => i.ToString()));
             }
-
-            Moderation.AddInfraction(user, Infraction.Create(Moderation.RequestInfractionID())
+            
+            Moderation.AddInfraction(user, Models.Database.Infraction.Create(user.Id)
                 .WithType(InfractionType.Warning)
-                .WithModerator(Context.User)
+                .WithModerator(Context.User.Id)
                 .WithDescription(reason));
 
             await ModerationLog.CreateEntry(ModerationLogEntry.New

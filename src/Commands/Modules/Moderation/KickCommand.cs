@@ -19,9 +19,9 @@ namespace BrackeysBot.Commands
         {
             await user.KickAsync(reason);
 
-            Moderation.AddInfraction(user, Infraction.Create(Moderation.RequestInfractionID())
+            Moderation.AddInfraction(user, Models.Database.Infraction.Create(user.Id)
                 .WithType(InfractionType.Kick)
-                .WithModerator(Context.User)
+                .WithModerator(Context.User.Id)
                 .WithDescription(reason));
 
             await ModerationLog.CreateEntry(ModerationLogEntry.New

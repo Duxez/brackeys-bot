@@ -13,6 +13,8 @@ namespace BrackeysBot
         TemporaryBan,
         Mute,
         TemporaryMute,
-        Kick
+        Kick,
+        TempBan,
+        TempMute
     }
 }

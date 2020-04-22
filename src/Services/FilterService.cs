@@ -80,9 +80,9 @@ namespace BrackeysBot.Services
             await s.DeleteAsync();
 
             _moderationService.AddInfraction(target, 
-                    Infraction.Create(_moderationService.RequestInfractionID())
+                    Models.Database.Infraction.Create(target.Id)
                     .WithType(InfractionType.Warning)
-                    .WithModerator(_discord.CurrentUser)
+                    .WithModerator(_discord.CurrentUser.Id)
                     .WithAdditionalInfo($"[Go near message]({url})\n**{message}**")
                     .WithDescription("Used filtered word"));
 

@@ -7,7 +7,7 @@ namespace BrackeysBot.Models.Database
     [Table("audit_log")]
     public class AuditLog
     {
-        [Key, Column("log_id"), Required] 
+        [Key, Column("log_id"), Required, DatabaseGenerated(DatabaseGeneratedOption.Identity)] 
         public int LogId { get; set; }
         [Column("date"), Required]
         public DateTime Date { get; set; }

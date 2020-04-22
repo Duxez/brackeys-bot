@@ -8,9 +8,7 @@ namespace BrackeysBot.Models.Database
         private readonly BotConfiguration _config;
 
         public DbSet<AuditLog> AuditLogs { get; set; }
-        public DbSet<Infractions> Infractions { get; set; }
-        public DbSet<ModerationTypes> ModerationTypes { get; set; }
-        public DbSet<TemporaryInfractions> TemporaryInfractions { get; set; }
+        public DbSet<Infraction> Infractions { get; set; }
         public DbSet<UserData> UserData { get; set; }
 
         public DatabaseContext(BotConfiguration config)

@@ -7,7 +7,7 @@ namespace BrackeysBot.Models.Database
     public class UserData
     {
         [Key, Column("user_id"), Required]
-        public int UserID { get; set;}
+        public ulong UserId { get; set;}
         [Key, Column("start"), Required]
         public int Stars { get; set; }
     }
